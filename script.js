@@ -1,113 +1,107 @@
 // script.js
-const choices = document.querySelectorAll('.choice');
-const playerScoreEl = document.getElementById('playerScore');
-const computerScoreEl = document.getElementById('computerScore');
-const resultText = document.getElementById('resultText');
-const playAgainBtn = document.getElementById('playAgainBtn');
-const countdownEl = document.getElementById('countdown');
 
-const winSound = document.getElementById('winSound');
-const loseSound = document.getElementById('loseSound');
-const drawSound = document.getElementById('drawSound');
+const choices = ["rock", "paper", "scissors"];
+const playerScoreEl = document.getElementById("playerScore");
+const computerScoreEl = document.getElementById("computerScore");
+const resultMessage = document.getElementById("resultMessage");
+const choiceButtons = document.querySelectorAll(".choice-btn");
+const countdownEl = document.getElementById("countdown");
+const resetBtn = document.getElementById("resetBtn");
+const playerChoiceImg = document.getElementById("playerChoice");
+const computerChoiceImg = document.getElementById("computerChoice");
 
 let playerScore = 0;
 let computerScore = 0;
-let isGameOver = false;
+let gameActive = true;
 
-const startCountdown = (callback) => {
+const winSound = new Audio("win.mp3");
+const loseSound = new Audio("lose.mp3");
+const drawSound = new Audio("draw.mp3");
+
+function getComputerChoice() {
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function showCountdown(callback) {
   let count = 3;
   countdownEl.textContent = count;
-  countdownEl.classList.remove('hidden');
+  countdownEl.classList.add("show");
 
   const interval = setInterval(() => {
     count--;
-    countdownEl.textContent = count;
     if (count === 0) {
       clearInterval(interval);
-      countdownEl.textContent = '';
-      countdownEl.classList.add('hidden');
+      countdownEl.classList.remove("show");
       callback();
+    } else {
+      countdownEl.textContent = count;
     }
   }, 1000);
-};
+}
 
-const getComputerChoice = () => {
-  const options = ['rock', 'paper', 'scissors'];
-  return options[Math.floor(Math.random() * options.length)];
-};
+function updateScores() {
+  playerScoreEl.textContent = playerScore;
+  computerScoreEl.textContent = computerScore;
+}
 
-const determineWinner = (player, computer) => {
-  if (player === computer) return 'draw';
+function checkWinner(player, computer) {
+  if (player === computer) return "draw";
   if (
-    (player === 'rock' && computer === 'scissors') ||
-    (player === 'scissors' && computer === 'paper') ||
-    (player === 'paper' && computer === 'rock')
+    (player === "rock" && computer === "scissors") ||
+    (player === "paper" && computer === "rock") ||
+    (player === "scissors" && computer === "paper")
   ) {
-    return 'player';
+    return "player";
   }
-  return 'computer';
-};
+  return "computer";
+}
 
-const showConfetti = () => {
-  confetti({
-    particleCount: 100,
-    spread: 120,
-    origin: { y: 0.6 },
-  });
-};
+function displayResult(winner, playerChoice, computerChoice) {
+  playerChoiceImg.src = `${playerChoice}.png`;
+  computerChoiceImg.src = `${computerChoice}.png`;
 
-const updateScore = (winner) => {
-  if (winner === 'player') {
-    playerScore++;
-    playerScoreEl.textContent = playerScore;
-    resultText.textContent = '🎉 You Win This Round!';
-    winSound.play();
-    showConfetti();
-  } else if (winner === 'computer') {
-    computerScore++;
-    computerScoreEl.textContent = computerScore;
-    resultText.textContent = '💻 Computer Wins This Round!';
-    loseSound.play();
-  } else {
-    resultText.textContent = "🤝 It's a Draw!";
+  if (winner === "draw") {
+    resultMessage.textContent = "🤝 It's a draw!";
     drawSound.play();
+  } else if (winner === "player") {
+    resultMessage.textContent = "🎉 You win this round!";
+    winSound.play();
+    playerScore++;
+  } else {
+    resultMessage.textContent = "💻 Computer wins this round!";
+    loseSound.play();
+    computerScore++;
   }
+
+  updateScores();
 
   if (playerScore === 5 || computerScore === 5) {
-    endGame();
+    gameActive = false;
+    resultMessage.textContent = playerScore === 5 ? "🎊 You won the game!" : "😢 Computer won the game!";
+    resetBtn.style.display = "block";
   }
-};
+}
 
-const endGame = () => {
-  isGameOver = true;
-  resultText.textContent += playerScore === 5 ? ' 🎊 You Won the Game!' : ' 😓 Computer Won the Game!';
-  playAgainBtn.classList.remove('hidden');
-  choices.forEach(btn => btn.disabled = true);
-};
+choiceButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (!gameActive) return;
 
-const resetGame = () => {
-  playerScore = 0;
-  computerScore = 0;
-  playerScoreEl.textContent = 0;
-  computerScoreEl.textContent = 0;
-  resultText.textContent = '';
-  isGameOver = false;
-  playAgainBtn.classList.add('hidden');
-  choices.forEach(btn => btn.disabled = false);
-};
-
-choices.forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (isGameOver) return;
-
-    const playerChoice = btn.id;
-
-    startCountdown(() => {
+    const playerChoice = btn.dataset.choice;
+    showCountdown(() => {
       const computerChoice = getComputerChoice();
-      const winner = determineWinner(playerChoice, computerChoice);
-      updateScore(winner);
+      const winner = checkWinner(playerChoice, computerChoice);
+      displayResult(winner, playerChoice, computerChoice);
     });
   });
 });
 
-playAgainBtn.addEventListener('click', resetGame);
+resetBtn.addEventListener("click", () => {
+  playerScore = 0;
+  computerScore = 0;
+  gameActive = true;
+  resultMessage.textContent = "";
+  playerChoiceImg.src = "";
+  computerChoiceImg.src = "";
+  resetBtn.style.display = "none";
+  updateScores();
+});
