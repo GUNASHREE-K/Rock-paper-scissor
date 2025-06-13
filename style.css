@@ -1,0 +1,147 @@
+/* Reset and body setup */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #fdf6f0;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Scoreboard */
+.scoreboard {
+  background: url('floral-board.png') no-repeat center center/cover;
+  width: 300px;
+  height: 120px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-shadow: 1px 1px 2px #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score h2 {
+  margin-bottom: 0.5rem;
+}
+
+/* Game buttons */
+.choices {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.choice-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  outline: none;
+}
+
+.choice-btn:hover {
+  transform: scale(1.1);
+}
+
+.choice-btn img {
+  width: 60%;
+  height: 60%;
+}
+
+/* Pastel themed colors for buttons */
+.choice-btn[data-choice="rock"] {
+  background-color: #ffeb78; /* pastel yellow */
+}
+
+.choice-btn[data-choice="paper"] {
+  background-color: #a2f3f1; /* pastel cyan */
+}
+
+.choice-btn[data-choice="scissors"] {
+  background-color: #f3c1f7; /* pastel pink-purple */
+}
+
+/* Countdown */
+#countdown {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #c44;
+  margin-bottom: 2rem;
+  height: 3rem;
+  transition: opacity 0.3s;
+}
+
+/* Result message */
+#result {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 1rem;
+  min-height: 2rem;
+}
+
+/* Play again button */
+#playAgain {
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  background-color: #ffd1dc;
+  color: #444;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: none;
+  transition: background-color 0.3s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+#playAgain:hover {
+  background-color: #ffc3d3;
+}
+
+/* Confetti canvas (from confetti.js) */
+canvas.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
