@@ -27,23 +27,22 @@ h1 {
   top: 0;
   left: 0;
   width: 100%;
-  max-height: 100%;
-  z-index: -1; /* Sends it behind everything */
-  opacity: 0.85; /* Optional: softens the image slightly */
-  pointer-events: none; /* So it doesn’t block clicks */
+  height: 100%;
+  z-index: -1;
+  opacity: 0.7;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .scores {
-  position: absolute;
+  position: relative;
   top: 30px;
-  left: 0;
-  right: 0;
-  text-align: center;
   display: flex;
   justify-content: space-around;
   align-items: center;
   color: #3c3c3c;
   font-size: 24px;
+  z-index: 1;
 }
 
 .player-score, .computer-score {
@@ -59,7 +58,7 @@ h1 {
   gap: 30px;
 }
 
-.option {
+.choice-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -67,7 +66,7 @@ h1 {
   transition: transform 0.2s ease;
 }
 
-.option img {
+.choice-btn img {
   width: 128px;
   height: 128px;
   border-radius: 50%;
@@ -76,7 +75,7 @@ h1 {
   transition: transform 0.3s;
 }
 
-.option img:hover {
+.choice-btn img:hover {
   transform: scale(1.1);
 }
 
@@ -118,7 +117,7 @@ h1 {
 }
 
 @media screen and (max-width: 768px) {
-  .option img {
+  .choice-btn img {
     width: 96px;
     height: 96px;
   }
